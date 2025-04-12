@@ -7,14 +7,14 @@ namespace Practical.Web.API.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-        [Route("api/[controller]/All")]
+        [Route("api/[controller]/[action]")]
         [HttpGet]
         public string GetAllEmployees()
         {
             return "Response from GetAllEmployees Method";
         }
 
-        [Route("api/[controller]/ById/{Id}")]
+        [Route("api/[controller]/[action]/{Id}")]
         [HttpGet]
         public string GetEmployeeById(int Id)
         {
