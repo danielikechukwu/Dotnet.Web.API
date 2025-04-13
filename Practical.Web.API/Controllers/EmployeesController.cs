@@ -94,6 +94,37 @@ namespace Practical.Web.API.Controllers
             return Ok(result);
         }
 
+        // GET api/Employee/DirectSearch?Gender=Male&Department=IT
+        [HttpGet("DirectSearch")]
+        public ActionResult<IEnumerable<Employee>> DirectSearchStudents()
+        {
+            string gender = HttpContext.Request.Query["Gender"].ToString();
+
+            string department = HttpContext.Request.Query["Department"].ToString();
+
+            string city = HttpContext.Request.Query["City"].ToString();
+
+            var filteredStudents = StudentData.Students.AsQueryable();
+
+            if (!string.IsNullOrEmpty(gender))
+                filteredStudents = filteredStudents.Where(e => e.Gender.Equals(gender, StringComparison.OrdinalIgnoreCase));
+
+            if (!string.IsNullOrEmpty(department))
+                filteredStudents = filteredStudents.Where(e => e.Department.Equals(department, StringComparison.OrdinalIgnoreCase));
+
+            if (!string.IsNullOrEmpty(city))
+                filteredStudents = filteredStudents.Where(e => e.City.Equals(city, StringComparison.OrdinalIgnoreCase));
+
+            var result = filteredStudents.ToList();
+
+            if (!result.Any())
+                return NotFound("No employees match the provided search criteria.");
+
+            return Ok(result);
+
+
+        }
+
         [Route("api/[controller]")]
         [HttpPost]
         public ActionResult<Employee> CreateEmployee([FromBody] Employee employee)
