@@ -41,6 +41,19 @@ namespace Practical.Web.API.Controllers
             return Ok(employee);
         }
 
+        [HttpGet("{gender}/{city}")]
+        public ActionResult<Student> GetStudentByGenderAndCity(string gender, string city)
+        {
+            var filteredStudents = StudentData.Students.Where(e => e.Gender.Equals(gender, StringComparison.OrdinalIgnoreCase) && 
+            e.City.Equals(city, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            if(!filteredStudents.Any())
+            {
+                return NotFound($"No Employee found with Gender '{gender}' in City '{city}'");
+            }
+            return Ok(filteredStudents);
+        } 
+
         [HttpPost]
         public ActionResult<Employee> CreateEmployee([FromBody] Employee employee)
         {
