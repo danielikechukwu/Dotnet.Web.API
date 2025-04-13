@@ -5,7 +5,7 @@ using Practical.Web.API.Repositories;
 
 namespace Practical.Web.API.Controllers
 {
-    [Route("api/[controller]")]
+    
     [ApiController]
     public class EmployeesController : ControllerBase
     {
@@ -18,6 +18,7 @@ namespace Practical.Web.API.Controllers
             _repository = repository;
         }
 
+        [Route("api/[controller]")]
         [HttpGet]
         public ActionResult<IEnumerable<Employee>> GetAllEmployees()
         {
@@ -27,7 +28,8 @@ namespace Practical.Web.API.Controllers
 
         }
 
-        [HttpGet("{Id}")]
+        [Route("api/[controller]/{Id}")]
+        [HttpGet]
         public ActionResult<Employee> GetEmployeeById(int Id)
         {
             
@@ -41,7 +43,8 @@ namespace Practical.Web.API.Controllers
             return Ok(employee);
         }
 
-        [HttpGet("{gender}/{city}")]
+        [Route("api/Student/{gender}/{city}")]
+        [HttpGet]
         public ActionResult<Student> GetStudentByGenderAndCity(string gender, string city)
         {
             var filteredStudents = StudentData.Students.Where(e => e.Gender.Equals(gender, StringComparison.OrdinalIgnoreCase) && 
@@ -52,8 +55,46 @@ namespace Practical.Web.API.Controllers
                 return NotFound($"No Employee found with Gender '{gender}' in City '{city}'");
             }
             return Ok(filteredStudents);
-        } 
+        }
 
+        [Route("api/Student/Search")]
+        [HttpGet]
+        public ActionResult<IEnumerable<Student>> SearchStudent([FromQuery] string department)
+        {
+            var filteredStudents = StudentData.Students.Where(e => e.Department.Equals(department, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            if (!filteredStudents.Any())
+            {
+                return NotFound($"No employees found in Department '{department}'.");
+            }
+            return Ok(filteredStudents);
+        }
+
+        // GET api/Employee/Search?Gender=Male&Department=IT&City=Los Angeles
+        [Route("api/Student/Searchs")]
+        [HttpGet]
+        public ActionResult<IEnumerable<Student>> SearchStudents([FromQuery] StudentSearch searchCriteria)
+        {
+            var filteredStudents = StudentData.Students.AsQueryable();
+
+            if(!string.IsNullOrEmpty(searchCriteria.Gender))
+                filteredStudents = filteredStudents.Where(e => e.Gender.Equals(searchCriteria.Gender, StringComparison.OrdinalIgnoreCase));
+
+            if (!string.IsNullOrEmpty(searchCriteria.Department))
+                filteredStudents = filteredStudents.Where(e => e.Department.Equals(searchCriteria.Department, StringComparison.OrdinalIgnoreCase));
+
+            if (!string.IsNullOrEmpty(searchCriteria.City))
+                filteredStudents = filteredStudents.Where(e => e.City.Equals(searchCriteria.City, StringComparison.OrdinalIgnoreCase));
+
+            var result = filteredStudents.ToList();
+
+            if(!result.Any())
+                return NotFound("No employees match the provided search criteria.");
+
+            return Ok(result);
+        }
+
+        [Route("api/[controller]")]
         [HttpPost]
         public ActionResult<Employee> CreateEmployee([FromBody] Employee employee)
         {
@@ -68,7 +109,8 @@ namespace Practical.Web.API.Controllers
 
         }
 
-        [HttpPut("{id}")]
+        [Route("api/[controller]/{id}")]
+        [HttpPut]
         public IActionResult updateEmployee(int id, [FromBody] Employee employee)
         {
             if (id != employee.Id)
@@ -88,7 +130,8 @@ namespace Practical.Web.API.Controllers
         }
 
         // Partially updates an existing employee (PATCH api/employee/{id}).
-        [HttpPatch("{id}")]
+        [Route("api/[controller]/{id}")]
+        [HttpPatch]
         public IActionResult patchEmployee(int id, [FromBody] Employee employee)
         {
             var existingEmployee = _repository.GetById(id);
@@ -110,7 +153,8 @@ namespace Practical.Web.API.Controllers
         }
 
         // Deletes an employee (DELETE api/employee/{id}).
-        [HttpDelete("{id}")]
+        [Route("api/[controller]/{id}")]
+        [HttpDelete]
         public IActionResult deleteEmployee(int id)
         {
             if (!_repository.Exists(id))
