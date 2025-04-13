@@ -125,6 +125,26 @@ namespace Practical.Web.API.Controllers
 
         }
 
+        [Route("api/Gender/{gender}")]
+        [HttpGet]
+        public ActionResult<IEnumerable<Student>> GetStudentsByGender([FromRoute]string gender, [FromQuery] string? department, [FromQuery] string? city)
+        {
+            var filteredStudents = StudentData.Students.Where(e => e.Gender.Equals(gender, StringComparison.OrdinalIgnoreCase));
+
+            if (!string.IsNullOrEmpty(department))
+                filteredStudents = filteredStudents.Where(e => e.Department.Equals(department, StringComparison.OrdinalIgnoreCase));
+
+            if (!string.IsNullOrEmpty(city))
+                filteredStudents = filteredStudents.Where(e => e.City.Equals(city, StringComparison.OrdinalIgnoreCase));
+
+            var result = filteredStudents.ToList();
+
+            if (!result.Any())
+                return NotFound("No employees match the provided search criteria.");
+
+            return Ok(result);
+        }
+
         [Route("api/[controller]")]
         [HttpPost]
         public ActionResult<Employee> CreateEmployee([FromBody] Employee employee)
