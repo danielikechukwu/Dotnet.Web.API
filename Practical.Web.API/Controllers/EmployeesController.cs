@@ -18,8 +18,10 @@ namespace Practical.Web.API.Controllers
             _repository = repository;
         }
 
-        [Route("api/[controller]")]
-        [HttpGet]
+        //Action method with multiple route        
+        [HttpGet("api/[controller]/All")]
+        [HttpGet("api/[controller]/AllEmployees")]
+        [HttpGet("api/[controller]/GetAll")]
         public ActionResult<IEnumerable<Employee>> GetAllEmployees()
         {
             var employees = _repository.GetAll();
