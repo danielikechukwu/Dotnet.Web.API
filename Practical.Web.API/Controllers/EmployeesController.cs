@@ -5,7 +5,7 @@ using Practical.Web.API.Repositories;
 
 namespace Practical.Web.API.Controllers
 {
-    
+    [Route("api/[controller]")]
     [ApiController]
     public class EmployeesController : ControllerBase
     {
@@ -19,9 +19,8 @@ namespace Practical.Web.API.Controllers
         }
 
         //Action method with multiple route        
-        [HttpGet("api/[controller]/All")]
-        [HttpGet("api/[controller]/AllEmployees")]
-        [HttpGet("api/[controller]/GetAll")]
+        [HttpGet("GetAll")]
+        [HttpGet("AllEmployees")]
         public ActionResult<IEnumerable<Employee>> GetAllEmployees()
         {
             var employees = _repository.GetAll();
@@ -30,7 +29,17 @@ namespace Practical.Web.API.Controllers
 
         }
 
-        [Route("api/[controller]/{Id}")]
+        //Action method with multiple route        
+        [HttpGet("All")]
+        public ActionResult<IEnumerable<Employee>> GetEmployees()
+        {
+            var employees = _repository.GetAll();
+
+            return Ok(employees);
+
+        }
+
+        [Route("{Id}")]
         [HttpGet]
         public ActionResult<Employee> GetEmployeeById(int Id)
         {
@@ -45,7 +54,7 @@ namespace Practical.Web.API.Controllers
             return Ok(employee);
         }
 
-        [Route("api/Student/{gender}/{city}")]
+        [Route("~/api/Student/{gender}/{city}")]
         [HttpGet]
         public ActionResult<Student> GetStudentByGenderAndCity(string gender, string city)
         {
@@ -56,10 +65,12 @@ namespace Practical.Web.API.Controllers
             {
                 return NotFound($"No Employee found with Gender '{gender}' in City '{city}'");
             }
+
             return Ok(filteredStudents);
+
         }
 
-        [Route("api/Student/Search")]
+        [Route("~/api/Student/Search")]
         [HttpGet]
         public ActionResult<IEnumerable<Student>> SearchStudent([FromQuery] string department)
         {
@@ -73,7 +84,7 @@ namespace Practical.Web.API.Controllers
         }
 
         // GET api/Employee/Search?Gender=Male&Department=IT&City=Los Angeles
-        [Route("api/Student/Searchs")]
+        [Route("~/api/Student/Searchs")]
         [HttpGet]
         public ActionResult<IEnumerable<Student>> SearchStudents([FromQuery] StudentSearch searchCriteria)
         {
@@ -96,8 +107,9 @@ namespace Practical.Web.API.Controllers
             return Ok(result);
         }
 
-        // GET api/Employee/DirectSearch?Gender=Male&Department=IT
-        [HttpGet("DirectSearch")]
+        // GET api/Student/DirectSearch?Gender=Male&Department=IT
+        [Route("~/api/Student/DirectSearch")]
+        [HttpGet]
         public ActionResult<IEnumerable<Employee>> DirectSearchStudents()
         {
             string gender = HttpContext.Request.Query["Gender"].ToString();
@@ -127,7 +139,7 @@ namespace Practical.Web.API.Controllers
 
         }
 
-        [Route("api/Gender/{gender}")]
+        [Route("~/api/Student/{gender}")]
         [HttpGet]
         public ActionResult<IEnumerable<Student>> GetStudentsByGender([FromRoute]string gender, [FromQuery] string? department, [FromQuery] string? city)
         {
@@ -147,7 +159,6 @@ namespace Practical.Web.API.Controllers
             return Ok(result);
         }
 
-        [Route("api/[controller]")]
         [HttpPost]
         public ActionResult<Employee> CreateEmployee([FromBody] Employee employee)
         {
@@ -162,7 +173,7 @@ namespace Practical.Web.API.Controllers
 
         }
 
-        [Route("api/[controller]/{id}")]
+        [Route("{id}")]
         [HttpPut]
         public IActionResult updateEmployee(int id, [FromBody] Employee employee)
         {
@@ -183,7 +194,7 @@ namespace Practical.Web.API.Controllers
         }
 
         // Partially updates an existing employee (PATCH api/employee/{id}).
-        [Route("api/[controller]/{id}")]
+        [Route("{id}")]
         [HttpPatch]
         public IActionResult patchEmployee(int id, [FromBody] Employee employee)
         {
@@ -206,7 +217,7 @@ namespace Practical.Web.API.Controllers
         }
 
         // Deletes an employee (DELETE api/employee/{id}).
-        [Route("api/[controller]/{id}")]
+        [Route("{id}")]
         [HttpDelete]
         public IActionResult deleteEmployee(int id)
         {
