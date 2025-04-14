@@ -39,6 +39,19 @@ namespace Practical.Web.API.Controllers
 
         }
 
+        [Route("{EmployeeId:int}")]
+        [HttpGet]
+        public string GetEmployeeDetails(int EmployeeId)
+        {
+            return $"Response from GetEmployeeDetails Method, EmployeeId : {EmployeeId}";
+        }
+        [Route("{EmployeeName:alpha}")]
+        [HttpGet]
+        public string GetEmployeeDetails(string EmployeeName)
+        {
+            return $"Response from GetEmployeeDetails Method, EmployeeName : {EmployeeName}";
+        }
+
         [Route("{Id}")]
         [HttpGet]
         public ActionResult<Employee> GetEmployeeById(int Id)
