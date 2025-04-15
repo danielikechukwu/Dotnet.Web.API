@@ -39,7 +39,7 @@ namespace Practical.Web.API.Controllers
 
         }
 
-        [Route("{EmployeeId:int}")]
+        [Route("{EmployeeId:int:min(100)}")]
         [HttpGet]
         public string GetEmployeeDetails(int EmployeeId)
         {
