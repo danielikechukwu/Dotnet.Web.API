@@ -18,6 +18,31 @@ namespace Practical.Web.API.Controllers
             // Additional products can be added here
         };
 
+        [Route("All")]
+        [HttpGet]
+
+        //Response for successful operation
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Product>))]
+
+        //Response for 500 error
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        public async Task<IActionResult> GetAllProducts()
+        {
+            try
+            {
+                await Task.Delay(TimeSpan.FromSeconds(5));
+
+                return Ok(_products);
+
+            }
+            catch (Exception ex)
+            {
+                // Return 500 Internal Server Error in case of an exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         //GET: api/products
         [HttpGet]
         public ActionResult<IEnumerable<Product>> GetProducts()

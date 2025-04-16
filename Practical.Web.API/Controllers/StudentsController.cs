@@ -9,6 +9,15 @@ namespace Practical.Web.API.Controllers
     public class StudentsController : ControllerBase
     {
 
+        private static readonly List<Student> student = new List<Student>
+        {
+            new Student { Id = 1, Name = "John Doe", Gender = "Male", City = "New York", Department = "HR" },
+            new Student { Id = 2, Name = "Jane Smith", Gender = "Female", City = "Los Angeles", Department = "Finance" },
+            new Student { Id = 3, Name = "Mike Johnson", Gender = "Male", City = "Chicago", Department = "IT" }
+        };
+
+        
+
         [Route("{gender}/{city}")]
         [HttpGet]
         public ActionResult<Student> GetStudentByGenderAndCity(string gender, string city)
@@ -38,7 +47,8 @@ namespace Practical.Web.API.Controllers
         [HttpGet]
         public ActionResult<Student> GetDetails()
         {
-            return new Student() {
+            return new Student()
+            {
                 Id = 1001,
                 Name = "Anurag",
                 City = "Mumbai",
@@ -88,6 +98,53 @@ namespace Practical.Web.API.Controllers
             {
                 return StatusCode(500, "An error occurred while processing your request");
             };
+        }
+
+        [Route("{id:int}")]
+        [HttpGet]
+
+        //As we are going to return Ok, StatusCode, and NotFound Result from this action method,
+        //we are using IActionResult as the return type of this method
+        //200 OK: Returns a list of Employee objects.
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Student>))]
+
+        //404 Not Found: Indicates that no employees were found.
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        //500 Internal Server Error: Indicates an unexpected error during processing.
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        public IActionResult GetStudentDetailById(int id)
+        {
+
+            try
+            {
+
+                var listStudents = new List<Student>
+            {
+                new Student { Id = 1001, Name = "Anurag", City = "Mumbai", Gender = "Male", Department = "IT" },
+                new Student { Id = 1002, Name = "Pranaya", City = "Delhi", Gender = "Male", Department = "IT" },
+                new Student { Id = 1003, Name = "Priyanka", City = "BBSR", Gender = "Female", Department = "HR" }
+            };
+
+                //Fetch the Employee details by the provided ID
+                var student = listStudents.FirstOrDefault(std => std.Id == id);
+
+                if (student != null)
+                {
+                    return Ok(student);
+                }
+                else
+                {
+                    //If Employee Does Not Exists Return NotFound
+                    return NotFound("Student does not exist.");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         [Route("Search")]
