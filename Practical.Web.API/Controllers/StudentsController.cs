@@ -47,6 +47,48 @@ namespace Practical.Web.API.Controllers
             };
         }
 
+        [Route("All")]
+        [HttpGet]
+        public List<Student> GetAllStudents()
+        {
+            return new List<Student> {
+
+                new Student { Id = 1001, Name = "Anurag", City = "Mumbai", Gender = "Male", Department = "IT" },
+                new Student { Id = 1002, Name = "Pranaya", City = "Delhi", Gender = "Male", Department = "IT" },
+                new Student { Id = 1003, Name = "Priyanka", City = "BBSR", Gender = "Female", Department = "HR" }
+            };
+        }
+
+        [Route("GetStudents")]
+        [HttpGet]
+        public ActionResult<Student> GetStudent()
+        {
+
+            var students = new List<Student> {
+
+                new Student { Id = 1001, Name = "Anurag", City = "Mumbai", Gender = "Male", Department = "IT" },
+                new Student { Id = 1002, Name = "Pranaya", City = "Delhi", Gender = "Male", Department = "IT" },
+                new Student { Id = 1003, Name = "Priyanka", City = "BBSR", Gender = "Female", Department = "HR" }
+            };
+
+            try
+            {
+                //If at least one Employee is Present return OK status code and the list of employees
+                if (students.Any())
+                {
+                    return Ok(students);
+                }
+                else
+                {
+                    //If no Employee is Present return Not Found Status Code
+                    return NotFound("No student match the provided search criteria.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing your request");
+            };
+        }
 
         [Route("Search")]
         [HttpGet]
