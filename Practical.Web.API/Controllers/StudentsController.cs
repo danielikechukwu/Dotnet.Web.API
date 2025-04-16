@@ -25,6 +25,29 @@ namespace Practical.Web.API.Controllers
 
         }
 
+        //Returning a primitive data type
+        [Route("Name")]
+        [HttpGet]
+        public string GetName()
+        {
+            return "Return from GetName";
+        }
+
+        //Returning a complex type
+        [Route("Details")]
+        [HttpGet]
+        public ActionResult<Student> GetDetails()
+        {
+            return new Student() {
+                Id = 1001,
+                Name = "Anurag",
+                City = "Mumbai",
+                Gender = "Male",
+                Department = "IT"
+            };
+        }
+
+
         [Route("Search")]
         [HttpGet]
         public ActionResult<IEnumerable<Student>> SearchStudent([FromQuery] string department)
