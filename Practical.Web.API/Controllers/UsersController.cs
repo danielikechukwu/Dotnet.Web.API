@@ -9,17 +9,26 @@ namespace Practical.Web.API.Controllers
     public class UsersController : ControllerBase
     {
         [HttpPost]
-        public IActionResult CreateUser([FromForm] UserModel user)
+        public async Task<IActionResult> CreateUser([FromForm] UserModel user)
         {
-            // Handle the user data, e.g., save it to a database
-            var response = new
+            
+            if(user.ProfilePicture != null)
             {
-                Success = true,
-                Message = $"User {user.Name} created successfully",
-                Code = StatusCodes.Status200OK
-            };
+                var uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
 
-            return Ok(response);
+                if (!Directory.Exists(uploadFolderPath))
+                {
+                    Directory.CreateDirectory(uploadFolderPath);
+                }
+
+                var filePath = Path.Combine(uploadFolderPath, user.ProfilePicture.FileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await user.ProfilePicture.CopyToAsync(stream);
+                }
+            }
+
         }
     }
 }
