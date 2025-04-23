@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Practical.Web.API.Models;
 
@@ -27,8 +28,20 @@ namespace Practical.Web.API.Controllers
                 {
                     await user.ProfilePicture.CopyToAsync(stream);
                 }
+
+                // Handle the user data, e.g., save it to a database
+                var response = new
+                {
+                    Success = true,
+                    Message = $"User {user.Name} created successfully!",
+                    ProfilePictureName = user.ProfilePicture.FileName,
+                    Code = StatusCodes.Status200OK
+                };
+
+                return Ok(response); 
             }
 
+            return BadRequest(ModelState);
         }
     }
 }
