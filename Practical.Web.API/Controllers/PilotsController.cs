@@ -19,17 +19,27 @@ namespace Practical.Web.API.Controllers
         };
 
         [HttpGet]
-        public ActionResult<IList<PilotModel>> GetPilots([FromQuery] string Department)
+        public ActionResult<IList<PilotModel>> GetPilots([FromQuery] PilotSearch pilotSearch)
         {
             // Implementation to retrieve employees based on the Department
-            var filtedPilots = pilot.Where(p => p.Department.Equals(Department, StringComparison.OrdinalIgnoreCase)).ToList();
+            var filtedPilots = new List<PilotModel>();
 
-            if (filtedPilots.Count > 0)
+            if(pilotSearch != null)
             {
-                return Ok(filtedPilots);
+                filtedPilots = pilot.Where(
+                    p => p.Department.Equals(pilotSearch.Department, StringComparison.OrdinalIgnoreCase) || 
+                    p.Gender.Equals(pilotSearch.Gender, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                if (filtedPilots.Count > 0)
+                {
+                    return Ok(filtedPilots);
+                }
+                return NotFound($"No Users Found with Department: {pilotSearch?.Department} and Gender: {pilotSearch?.Gender}");
+
             }
 
-            return NotFound($"No Users Found with Department: {Department}");
+            return BadRequest("Invalid Search Criteria");
+            
         }
     }
 }
