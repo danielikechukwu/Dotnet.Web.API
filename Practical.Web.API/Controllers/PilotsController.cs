@@ -8,7 +8,7 @@ namespace Practical.Web.API.Controllers
     [ApiController]
     public class PilotsController : ControllerBase
     {
-        private static List<PilotModel> pilot = new List<PilotModel> {
+        private static List<PilotModel> Pilot = new List<PilotModel> {
 
             new PilotModel { Id = 1, Name = "Rakesh", Department = "IT", Gender = "Male", Salary = 1000 },
             new PilotModel { Id = 2, Name = "Priyanka", Department = "IT", Gender = "Female", Salary = 2000  },
@@ -26,7 +26,7 @@ namespace Practical.Web.API.Controllers
 
             if(pilotSearch != null)
             {
-                filtedPilots = pilot.Where(
+                filtedPilots = Pilot.Where(
                     p => p.Department.Equals(pilotSearch.Department, StringComparison.OrdinalIgnoreCase) || 
                     p.Gender.Equals(pilotSearch.Gender, StringComparison.OrdinalIgnoreCase)).ToList();
 
@@ -40,6 +40,36 @@ namespace Practical.Web.API.Controllers
 
             return BadRequest("Invalid Search Criteria");
             
+        }
+
+        // Now, you can use "ProductId" to refer to the parameter that comes from the route.
+        // Fetch the Product by the ProductId and return a response
+
+        [HttpGet("{id}")]
+        public ActionResult<PilotModel> GetPilotById([FromRoute(Name = "id")] int pilotId)
+        {
+            var pilot = Pilot.FirstOrDefault(p => p.Id == pilotId);
+
+            if(pilot != null)
+            {
+                return Ok(pilot);
+            }
+
+            return NotFound($"No Product Found with Product Id: {pilotId}");
+        }
+
+        [HttpGet("{Name}/{Department}")]
+        public ActionResult<PilotModel> GetPilotByNameCategory([FromRoute] PilotRoute pilotRoute)
+        {
+            if(pilotRoute != null)
+            {
+                var filteredPilot = Pilot.Where(p => p.Name.ToLower().StartsWith(pilotRoute.Name.ToLower()) &&
+                p.Department.ToLower() == pilotRoute.Department.ToLower()).ToList();
+
+                return Ok(filteredPilot);
+            }
+
+            return BadRequest("Invalid Search Criteria");
         }
     }
 }
