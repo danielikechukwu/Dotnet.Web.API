@@ -7,7 +7,7 @@ namespace Practical.Web.API.Models
     {
         public int Id { get; set; }
 
-        public List<Product> products { get; set; }
+        public List<Product> Products { get; set; }
     }
 
     public class Product
