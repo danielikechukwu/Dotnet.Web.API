@@ -73,6 +73,16 @@ namespace Practical.Web.API.Controllers
 
         }
 
+        //Handling lists of productions.
+        [Route("CreateListProducts")]
+        [HttpPost]
+        public ActionResult<Order> CreateListProducts([FromBody] Order order)
+        {
+            // Handle multiple products
+            // For demonstration, let's return the products back
+            return Ok(order);
+        }
+
         //PUT: api/products/{id}
         [HttpPut("{id}")]
         public IActionResult PutProduct(int id, [FromBody] Product updatedProduct)

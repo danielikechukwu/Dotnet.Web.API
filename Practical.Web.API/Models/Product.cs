@@ -2,6 +2,14 @@
 
 namespace Practical.Web.API.Models
 {
+
+    public class Order
+    {
+        public int Id { get; set; }
+
+        public List<Product> products { get; set; }
+    }
+
     public class Product
     {
         public int Id { get; set; }
@@ -16,4 +24,5 @@ namespace Practical.Web.API.Models
         [Required]
         public string Category { get; set; }
     }
+
 }
