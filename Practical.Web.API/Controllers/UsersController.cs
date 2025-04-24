@@ -43,5 +43,17 @@ namespace Practical.Web.API.Controllers
 
             return BadRequest(ModelState);
         }
+
+        [HttpGet]
+        public IActionResult GetResource([FromHeader] string Authorization)
+        {
+            //Implementation
+            if (Authorization != null)
+            {
+                return BadRequest("Authorization token is missing");
+            }
+
+            return Ok("Request processed successfully");
+        }
     }
 }
